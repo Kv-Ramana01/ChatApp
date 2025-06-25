@@ -11,6 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
 import com.example.chatapp.data.remote.ChatRemoteDataSource
 import com.example.chatapp.data.repository.ChatRepositoryImpl
 import com.example.chatapp.domain.usecase.GenerateAiReplyUseCase
@@ -19,6 +21,7 @@ import com.example.chatapp.domain.usecase.SendMessageUseCase
 import com.example.chatapp.presentation.ChatViewModel
 import com.example.chatapp.presentation.screen.ChatScreen
 import com.example.chatapp.ui.theme.ChatAppTheme
+import com.example.chatapp.worker.GeminiPushWorker
 import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
@@ -36,6 +39,10 @@ class MainActivity : ComponentActivity() {
         setContent {
             ChatScreen(vm)
         }
+
+        val testWork = OneTimeWorkRequestBuilder<GeminiPushWorker>().build()
+        WorkManager.getInstance(this).enqueue(testWork)
+
     }
 }
 

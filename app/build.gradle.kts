@@ -70,5 +70,8 @@ dependencies {
     implementation(libs.firebase.firestore)
 
     implementation("com.google.firebase:firebase-ai")
+    implementation(libs.androidx.work.runtime.ktx)
+    implementation("com.google.firebase:firebase-messaging")
+
 
 }
