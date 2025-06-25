@@ -11,37 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.chatapp.data.remote.ChatRemoteDataSource
+import com.example.chatapp.data.repository.ChatRepositoryImpl
+import com.example.chatapp.domain.usecase.GenerateAiReplyUseCase
+import com.example.chatapp.domain.usecase.GetMessagesUseCase
+import com.example.chatapp.domain.usecase.SendMessageUseCase
+import com.example.chatapp.presentation.ChatViewModel
+import com.example.chatapp.presentation.screen.ChatScreen
 import com.example.chatapp.ui.theme.ChatAppTheme
+import com.google.firebase.FirebaseApp
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        FirebaseApp.initializeApp(this)
+
+        val repo = ChatRepositoryImpl(ChatRemoteDataSource())
+        val vm = ChatViewModel(
+            SendMessageUseCase(repo),
+            GetMessagesUseCase(repo),
+            GenerateAiReplyUseCase()
+        )
+
         setContent {
-            ChatAppTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
-            }
+            ChatScreen(vm)
         }
     }
 }
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    ChatAppTheme {
-        Greeting("Android")
-    }
-}
